@@ -9,7 +9,6 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
-from sklearn.metrics import precision_recall_curve, roc_curve
 
 
 def ko(text: str) -> str:
@@ -57,6 +56,30 @@ def format_pvalue(value: float) -> str:
     if pd.isna(value):
         return ""
     return "<0.001" if value < 0.001 else f"{value:.3f}"
+
+
+def binary_roc_curve(labels: pd.Series, scores: pd.Series) -> tuple[np.ndarray, np.ndarray]:
+    frame = pd.DataFrame({"label": labels.astype(int), "score": scores.astype(float)})
+    frame = frame.sort_values("score", ascending=False)
+    positives = max(int(frame["label"].sum()), 1)
+    negatives = max(int((frame["label"] == 0).sum()), 1)
+    tps = frame["label"].cumsum().to_numpy(dtype=float)
+    fps = (1 - frame["label"]).cumsum().to_numpy(dtype=float)
+    tpr = np.r_[0.0, tps / positives, 1.0]
+    fpr = np.r_[0.0, fps / negatives, 1.0]
+    return fpr, tpr
+
+
+def binary_precision_recall_curve(labels: pd.Series, scores: pd.Series) -> tuple[np.ndarray, np.ndarray]:
+    frame = pd.DataFrame({"label": labels.astype(int), "score": scores.astype(float)})
+    frame = frame.sort_values("score", ascending=False)
+    positives = max(int(frame["label"].sum()), 1)
+    tps = frame["label"].cumsum().to_numpy(dtype=float)
+    fps = (1 - frame["label"]).cumsum().to_numpy(dtype=float)
+    precision = tps / np.maximum(tps + fps, 1.0)
+    recall = tps / positives
+    positive_rate = float(frame["label"].mean()) if not frame.empty else 0.0
+    return np.r_[1.0, recall], np.r_[positive_rate, precision]
 
 
 def resolve_image_path(row: pd.Series) -> Path | None:
@@ -164,8 +187,8 @@ with tab_experiments:
         if not oof.empty:
             selected = st.selectbox("OOF curve model", sorted(oof["experiment"].unique()))
             model_oof = oof[oof["experiment"] == selected]
-            fpr, tpr, _ = roc_curve(model_oof["label"], model_oof["prob_defect"])
-            precision, recall, _ = precision_recall_curve(model_oof["label"], model_oof["prob_defect"])
+            fpr, tpr = binary_roc_curve(model_oof["label"], model_oof["prob_defect"])
+            recall, precision = binary_precision_recall_curve(model_oof["label"], model_oof["prob_defect"])
             left, right = st.columns(2)
             left.plotly_chart(go.Figure(data=go.Scatter(x=fpr, y=tpr)).update_layout(title="OOF ROC Curve", xaxis_title="FPR", yaxis_title="TPR"), width="stretch")
             right.plotly_chart(go.Figure(data=go.Scatter(x=recall, y=precision)).update_layout(title="OOF PR Curve", xaxis_title="Recall", yaxis_title="Precision"), width="stretch")
