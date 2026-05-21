@@ -1,0 +1,17 @@
+kaggle
+python-dotenv
+pandas
+numpy
+matplotlib
+seaborn
+Pillow
+scikit-learn
+scipy
+statsmodels
+torch
+torchvision
+streamlit
+plotly
+lightgbm
+xgboost
+tqdm

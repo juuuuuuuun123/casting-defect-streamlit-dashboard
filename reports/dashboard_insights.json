@@ -1,0 +1,42 @@
+{
+  "best_experiment": "F3_lightgbm_weighted",
+  "holdout_metrics": {
+    "threshold": 0.5,
+    "accuracy": 0.9900271985494107,
+    "precision": 0.9920760697305864,
+    "recall": 0.990506329113924,
+    "f1": 0.9912905779889153,
+    "roc_auc": 0.9994053857937596,
+    "pr_auc": 0.9995855432320221,
+    "specificity": 0.9893842887473461,
+    "false_negative_rate": 0.00949367088607595,
+    "tn": 466,
+    "fp": 5,
+    "fn": 6,
+    "tp": 626
+  },
+  "best_cv": {
+    "f1_mean": 0.99176,
+    "recall_mean": 0.99134,
+    "pr_auc_mean": 0.99892,
+    "false_negative_rate_mean": 0.00866
+  },
+  "top_feature_summary": {
+    "top_pixel_count": 51,
+    "metadata_importance_share": 0.12711111111111112,
+    "pixel_importance_share": 0.8728888888888888
+  },
+  "error_summary": {
+    "total_errors": 11,
+    "false_negatives": 6,
+    "false_positives": 5,
+    "high_confidence_errors": 10,
+    "near_threshold_errors": 1
+  },
+  "recommendations": [
+    "Inspect high-confidence errors first; these are the strongest candidates for label noise, duplicate leakage, or systematic preprocessing artifacts.",
+    "Compare threshold 0.5 with a recall-oriented operating point because false negatives are operationally more expensive in defect inspection.",
+    "Move from low-resolution pixel features to transfer learning CNN or GradCAM to verify that the model focuses on defect regions rather than borders or lighting.",
+    "Use hard-example mining by adding repeated augmentation for high-confidence false negatives and borderline near-threshold cases."
+  ]
+}

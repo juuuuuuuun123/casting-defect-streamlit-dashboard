@@ -1,0 +1,8 @@
+{
+  "table_00_both_correct": 5787,
+  "table_01_baseline_only": 20,
+  "table_10_challenger_only": 391,
+  "table_11_both_wrong": 47,
+  "statistic": 333.09002433090023,
+  "pvalue": 2.04072876095084e-74
+}

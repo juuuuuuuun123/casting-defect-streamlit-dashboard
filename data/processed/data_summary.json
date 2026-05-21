@@ -1,0 +1,14 @@
+{
+  "n_images":7348.0,
+  "n_defective":4211.0,
+  "n_ok":3137.0,
+  "holdout_images":1103.0,
+  "train_valid_images":6245.0,
+  "duplicate_sha1_count":128.0,
+  "width_min":300.0,
+  "width_max":300.0,
+  "height_min":300.0,
+  "height_max":300.0,
+  "brightness_mean":143.7465490957,
+  "contrast_mean":60.1517495055
+}
